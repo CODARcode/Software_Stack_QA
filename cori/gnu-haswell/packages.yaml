@@ -1,0 +1,82 @@
+packages:
+    all:
+        providers:
+            mpi: [mpich]
+        compiler: [gcc@7.1.0]
+    mpich:
+        buildable: false
+        paths:
+           mpich@5.1%gcc@7.1.0: /opt/cray/pe/mpt/7.6.2/gni/mpich-gnu/5.1
+    sz:
+        version: [1.4.12.3]
+        variants: ~shared ~fortran
+    dataspaces:
+        version: [develop]
+        variants: +dimes ~tcp ~infiniband +cray-drc
+    adios:
+        version: [develop]
+        variants: staging=dataspaces,flexpath +sz +zfp +lz4 +bzip2 +fortran +mgard ~blosc ~infiniband
+    zfp:
+        version: [0.5.0]
+        variants: ~shared
+    mgard:
+        version: [develop]
+    libevpath:
+        version: [develop]
+        paths:
+            libevpath@develop%gcc@7.1.0: /global/project/projectdirs/m3084/cluster2018/sw/korvo
+    libffs:
+        version: [develop]
+        paths:
+            libffs@develop%gcc@7.1.0: /global/project/projectdirs/m3084/cluster2018/sw/korvo
+    gtkorvo-dill:
+        version: [develop]
+        paths:
+            gtkorvo-dill@develop%gcc@7.1.0: /global/project/projectdirs/m3084/cluster2018/sw/korvo
+    gtkorvo-atl:
+        version: [develop]
+        paths:
+            gtkorvo-atl@develop%gcc@7.1.0: /global/project/projectdirs/m3084/cluster2018/sw/korvo
+    gtkorvo-cercs-env:
+        version: [develop]
+        paths:
+            gtkorvo-cercs-env@develop%gcc@7.1.0: /global/project/projectdirs/m3084/cluster2018/sw/korvo
+    cmake:
+        paths:
+            cmake@3.5.2: /usr
+    autoconf:
+        paths:
+            autoconf@2.69: /usr
+    m4:
+        paths:
+            m4@1.4.16: /usr
+    flex:
+        paths:
+            flex@2.5.37: /usr
+    libtool:
+        paths:
+            libtool@2.4.2: /usr
+    openssl:
+        paths:
+            openssl@none: /usr
+    python:
+        paths:
+            python@2.7.13: /usr
+    automake:
+        paths:
+            automake@1.13.4: /usr
+    pkg-config:
+        paths:
+            pkg-config@0.28: /usr
+    gettext:
+        paths:
+            gettext@0.19.2: /usr
+    tar:
+        paths:
+            tar@1.27.1: /
+    bison:
+        paths:
+            bison@2.7: /usr
+    zsh:
+        paths:
+            zsh@5.0.5: /usr
