@@ -27,7 +27,7 @@ TODO: consider doing `module unload darshan` first.
     Note: use the codar branch once these changes have been merged.
 
 3. Copy `packages.yaml` and `mirrors.yaml` from this directory to
- `~/.spack/packages.yaml`. Edit korvo paths in `packages.yaml` to point at
+ `~/.spack/`. Edit korvo paths in `packages.yaml` to point at
  the location of the installed GTkorvo libraries. The mirrors file points at
  a spack mirror with version of dataspaces and mgard that are not available
  for public download.
