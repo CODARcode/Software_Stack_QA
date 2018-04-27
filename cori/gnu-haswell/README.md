@@ -13,7 +13,7 @@ TODO: consider doing `module unload darshan` first.
     [Korvo Bootstrap](https://gtkorvo.github.io/). Consider using a shared
     location in `/global/project/projectdirs/m3084/`.
     ```
-    wget –q https://gtkorvo.github.io/korvo_bootstrap.pl
+    wget -q https://gtkorvo.github.io/korvo_bootstrap.pl
     perl ./korvo_bootstrap.pl stable /global/project/projectdirs/m3084/your/sw/directory
     perl ./korvo_build.pl
     ```
@@ -26,8 +26,11 @@ TODO: consider doing `module unload darshan` first.
     ```
     Note: use the codar branch once these changes have been merged.
 
-3. Copy `packages.yaml` from this directory to `~/.spack/packages.yaml`.
- Edit korvo paths to point at location of installed GTkorvo libraries.
+3. Copy `packages.yaml` and `mirrors.yaml` from this directory to
+ `~/.spack/packages.yaml`. Edit korvo paths in `packages.yaml` to point at
+ the location of the installed GTkorvo libraries. The mirrors file points at
+ a spack mirror with version of dataspaces and mgard that are not available
+ for public download.
 
 4. Install adios and dependencies using spack. Note that this will use the
     cray system MPI and other standard tools, as well as the GTkorvo libraries
