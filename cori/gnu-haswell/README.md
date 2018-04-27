@@ -26,8 +26,8 @@ TODO: consider doing `module unload darshan` first.
     ```
     Note: use the codar branch once these changes have been merged.
 
-3. Copy `codar/cori/packages.yaml` to `~/.spack/packages.yaml`. Edit korvo
- paths to point at location of installed GTkorvo libraries.
+3. Copy `packages.yaml` from this directory to `~/.spack/packages.yaml`.
+ Edit korvo paths to point at location of installed GTkorvo libraries.
 
 4. Install adios and dependencies using spack. Note that this will use the
     cray system MPI and other standard tools, as well as the GTkorvo libraries
