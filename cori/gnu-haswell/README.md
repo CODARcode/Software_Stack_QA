@@ -68,13 +68,14 @@ module load papi
 wget https://www.sqlite.org/2017/sqlite-autoconf-3200100.tar.gz
 tar -xvf sqlite-autoconf-3200100.tar.gz
 cd sqlite-autoconf-3200100
-CC=`which gcc` CXX=`which g++` ./configure --prefix=/projects/CSC249ADCD01/your/sw/directory
+CC=`which gcc` CXX=`which g++` ./configure --prefix=/global/project/projectdirs/m3084/tau/sqlite3
 make -k
 make install -k
 ```
 
 2. Install SOS
-SOS has a dependency on EVPath and SQLite3.  It also requres the cmake/3.3.2 module on Cori.
+SOS has a dependency on EVPath and SQLite3.  It also requres the cmake/3.3.2 module on Cori.  Because the Cray compiler wrappers default to static linking (and because EVPath was built as static libraries), SOS needs to be configured for static linking.  To do this, we use the options ```-DBUILD_SHARED_LIBS=FALSE``` and ```-DSOS_FORCE_RPATH=FALSE```.
+
 ```
 module load cmake/3.3.2
 git clone https://github.com/cdwdirect/sos_flow.git
@@ -85,9 +86,9 @@ export CC=cc
 export CXX=CC
 cmake \
     -DCMAKE_BUILD_TYPE=Debug \
-    -DCMAKE_INSTALL_PREFIX=/projects/CSC249ADCD01/your/sw/directory \
-    -DSQLite3_DIR=/projects/CSC249ADCD01/tau/sqlite3 \
-    -DEVPath_DIR=/projects/CSC249ADCD01/sw/korvo \
+    -DCMAKE_INSTALL_PREFIX=/global/project/projectdirs/m3084/tau/sos_flow \
+    -DSQLite3_DIR=/global/project/projectdirs/m3084/tau/sqlite3 \
+    -DEVPath_DIR=/global/project/projectdirs/m3084/cluster2018/sw/korvo \
     -DCMAKE_C_COMPILER=cc \
     -DCMAKE_CXX_COMPILER=CC \
     -DSOS_ENABLE_PYTHON=TRUE \
@@ -106,12 +107,55 @@ PDT is a large download, and is only required for auto-instrumentation of source
 wget http://tau.uoregon.edu/pdt.tgz
 tar -xzf pdt.tgz
 cd pdtoolkit-3.25
-CC=gcc CXX=g++ ./configure -GNU -prefix=/projects/CSC249ADCD01/your/sw/directory
+CC=gcc CXX=g++ ./configure -GNU -prefix=/global/project/projectdirs/m3084/tau/pdt
 make install
 ```
 
 4. Install TAU
-TAU has a dependency on PDT, SOS, ADIOS, PAPI.
+TAU has a dependency on PDT, SOS, ADIOS, PAPI.  TAU also needs to be configured and built for different runtime uses, in particular for systems where compute nodes and head nodes are different operating systems or environments (like Cori).
+
+* first, build the TAU front-end tools.
+    
 ```
-TBD
+# The latest official release of TAU is tau.tgz, the current working master is tau2.tgz
+wget http://tau.uoregon.edu/tau2.tgz
+tar -xzf tau2.tgz
+cd tau-2.27
+CC=gcc CXX=g++ ./configure \
+    -prefix=/global/project/projectdirs/m3084/tau/tau \
+    -bfd=download -unwind=download \
+    -pdt=/global/project/projectdirs/m3084/tau/pdt \
+    -pdt_c++=g++
+make install
 ```
+
+* second, build the TAU compute node environment with binutils and libunwind compiled with GCC
+
+```
+CC=gcc CXX=g++ ./configure \
+    -prefix=/global/project/projectdirs/m3084/tau/tau \
+    -arch=craycnl \
+    -bfd=download -unwind=download \
+    -pdt=/global/project/projectdirs/m3084/tau/pdt \
+    -pdt_c++=g++
+make install
+```
+
+* finally, build the TAU configuration we will use on the compute nodes
+
+````
+# Get the path to PAPI, ADIOS from the module and Spack
+export PAPI_PATH=`pkg-config --cflags papi | sed -r 's/^-I//' | xargs dirname`
+export ADIOS_DIR="$( cd "$( dirname `which adios_config` )" && pwd )"
+./configure \
+    -arch=craycnl \
+    -cc=gcc -c++=g++ -fortran=gfortran \
+    -iowrapper -mpi -pthread -bfd=download -unwind=download \
+    -pdt=/global/project/projectdirs/m3084/tau/pdt \
+    -pdt_c++=g++ \
+    -prefix=/global/project/projectdirs/m3084/tau/tau \
+    -sos=/global/project/projectdirs/m3084/tau/sos_flow \
+    -adios=${ADIOS_DIR} \
+    -papi=${PAPI_PATH}
+make install
+````
