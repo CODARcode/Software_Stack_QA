@@ -12,10 +12,10 @@ packages:
         variants: ~shared ~fortran
     dataspaces:
         version: [develop]
-        variants: +dimes ~tcp ~infiniband +cray-drc
+        variants: ~dimes +tcp ~infiniband ~cray-drc
     adios:
         version: [develop]
-        variants: staging=dataspaces,flexpath +sz +zfp +lz4 +bzip2 +fortran +mgard ~blosc ~infiniband
+        variants: staging=dataspaces,flexpath +sz +zfp +lz4 +bzip2 +fortran +mgard +blosc ~infiniband
     zfp:
         version: [0.5.0]
         variants: ~shared
