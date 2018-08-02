@@ -1,10 +1,3 @@
-# Savanna Titan Install Notes
-
-Before installing the software stack, check for an installation in `/lustre/atlas/proj-shared/csc249/CSC249ADCD01/software/titan.gnu/gcc-6.3.0/`. 
-
-A customized bash script is provided below to install all components of the codar stack. Users are encouraged to study the script and set the `INSTALL_ROOT` to point to a location where they want to install the library.
-
-```bash
 #!/bin/bash
 
 source $MODULESHOME/init/bash
@@ -447,5 +440,3 @@ module load cudatoolkit
 build_tau
 
 rm *tar.gz
-```
-
