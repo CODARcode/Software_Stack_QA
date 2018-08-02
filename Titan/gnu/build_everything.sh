@@ -18,7 +18,7 @@ set -e
 
 WORK_DIR=$PWD
 DATE=`date +%Y-%m-%d`
-INSTALL_ROOT=/ccs/proj/csc249/CSC249ADCD01/soft/gcc6.4/${DATE}
+INSTALL_ROOT=/ccs/proj/csc249/CSC249ADCD01/soft/titan.gnu6.4/${DATE}
 
 if [ ! -d ${INSTALL_ROOT} ] ; then
     mkdir -p ${INSTALL_ROOT}
@@ -28,7 +28,8 @@ SZ_VERSION=1.4.12.3
 ZFP_VERSION=0.5.2
 LZ4_VERSION=1.8.1.2
 BLOSC_VERSION=1.14.3
-DATASPACES_VERSION=develop
+#DATASPACES_VERSION=develop
+DATASPACES_VERSION=1.7.0
 ADIOS_VERSION=develop
 SQLITE3_VERSION=3200100
 SOS_FLOW_VERSION=master
@@ -248,9 +249,9 @@ build_adios_python()
     make python
     python setup.py install --prefix=$INSTALL_ROOT/adios-${ADIOS_VERSION}
     make clean
-    make CC=cc CXX=CC MPI=y python
     export CFLAGS="-fPIC `cc --cray-print-opts=cflags`"
     export CXXFLAGS="-fPIC `CC --cray-print-opts=cxxflags`"
+    make CC=cc CXX=CC MPI=y python
     python setup.py install --prefix=$INSTALL_ROOT/adios-${ADIOS_VERSION}
     module unload python_numpy
 }
@@ -372,11 +373,11 @@ build_tau()
     -pdt_c++=g++ \
     -bfd=download -unwind=download -otf=download \
     -arch=craycnl
-    make -j -l32 install
+    make -j8 -l24 install
 
     # different configurations for mutually exclusive config options.
     for cuda_settings in "" "-cuda=${CUDATOOLKIT_HOME}" ; do
-        for thread_settings in "-pthread" "-openmp -ompt" "-openmp -opari" ; do
+        for thread_settings in "-pthread" "-openmp -ompt=download" "-openmp -opari" ; do
             for python_settings in "" "-python" ; do
                 # build config with all CODAR support
                 ./configure \
@@ -391,7 +392,7 @@ build_tau()
                 -sos=${INSTALL_ROOT}/sos_flow-${SOS_FLOW_VERSION} \
                 -papi=${PAPI_PATH} \
                 ${thread_settings} ${cuda_settings} ${python_settings}
-                make -j -l32 install
+                make -j8 -l24 install
             done
         done
     done
@@ -424,13 +425,13 @@ build_dataspaces
 # ADIOS
 export CRAYPE_LINK_TYPE=dynamic
 build_adios
+module load python
 build_adios_python
 module unload craype-hugepages2M
 
 # SOS
 unset CRAYPE_LINK_TYPE
 build_sqlite3
-module load python
 build_ffi
 build_sos
 
