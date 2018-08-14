@@ -6,15 +6,19 @@ use the following as a starting point. Before building anything, switch to the
 gnu compiler chain:
 ```
 module sw PrgEnv-intel PrgEnv-gnu
+module unload darshan
 ```
-TODO: consider doing `module unload darshan` first.
 
 1. Install EVPath and related libraries using
-    [Korvo Bootstrap](https://gtkorvo.github.io/). Consider using a shared
-    location in `/global/project/projectdirs/m3084/`.
+    [Korvo Bootstrap](https://gtkorvo.github.io/), development tag.
+    Consider using a shared location in `/global/project/projectdirs/m3084/soft`
+    with compiler and date prefixes:
     ```
+    CODAR_HOME=/global/project/projectdirs/m3084/soft/cori.gnu7.3/2018-08-14
+    mkdir -p $CODAR_HOME/korvo_build
+    cd $CODAR_HOME/korvo_build
     wget -q https://gtkorvo.github.io/korvo_bootstrap.pl
-    perl ./korvo_bootstrap.pl stable /global/project/projectdirs/m3084/your/sw/directory
+    perl ./korvo_bootstrap.pl development $CODAR_HOME/korvo
     perl ./korvo_build.pl
     ```
 
@@ -22,15 +26,20 @@ TODO: consider doing `module unload darshan` first.
     from the `CODARcode` fork and `codar-theta` branch (not a typo - branch
     includes changes for both theta and cori):
     ```
+    cd $CODAR_HOME
     git clone --branch codar-theta git@github.com:CODARcode/spack.git
     ```
     Note: use the codar branch once these changes have been merged.
 
 3. Copy `packages.yaml` and `mirrors.yaml` from this directory to
- `~/.spack/`. Edit korvo paths in `packages.yaml` to point at
- the location of the installed GTkorvo libraries. The mirrors file points at
- a spack mirror with version of dataspaces and mgard that are not available
- for public download.
+    `$CODAR_HOME/etc/spack/`. Double check that the gnu compiler version has
+    not changed, and update if needed, along with the cray-mpich path.
+    Edit korvo paths in `packages.yaml` to point at
+    the location of the installed GTkorvo libraries. The mirrors file points at
+    a spack mirror with version of dataspaces and mgard that are not available
+    for public download. IMPORTANT: remove or rename `~/.spack`, it takes
+    precedence over the per-install configuration and makes it difficult to
+    have multiple spack installations.
 
 4. Install adios and dependencies using spack. Note that this will use the
     cray system MPI and other standard tools, as well as the GTkorvo libraries
