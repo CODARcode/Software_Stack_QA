@@ -17,7 +17,6 @@ set -e
 
 WORK_DIR=$PWD
 DATE=`date +%Y-%m-%d`
-DATE=2018-08-17
 INSTALL_ROOT=/ccs/proj/csc249/CSC249ADCD01/soft/titan.pgi18.4.0/${DATE}
 
 if [ ! -d ${INSTALL_ROOT} ] ; then
