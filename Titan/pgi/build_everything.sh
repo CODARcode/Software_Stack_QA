@@ -17,7 +17,8 @@ set -e
 
 WORK_DIR=$PWD
 DATE=`date +%Y-%m-%d`
-INSTALL_ROOT=/ccs/proj/csc249/CSC249ADCD01/soft/titan.pgi18.4.0/${DATE}
+#INSTALL_ROOT=/ccs/proj/csc249/CSC249ADCD01/soft/titan.pgi18.4.0/${DATE}
+INSTALL_ROOT=/ccs/proj/csc143/khuck/titan.pgi18.4.0/${DATE}
 
 if [ ! -d ${INSTALL_ROOT} ] ; then
     mkdir -p ${INSTALL_ROOT}
@@ -245,6 +246,8 @@ build_adios()
 
 build_adios_python()
 {
+    cd $WORK_DIR
+    echo_start "adios_python"
     export LIBS=-lstdc++
     export CFLAGS=-fPIC
     export CXXFLAGS=-fPIC
@@ -264,10 +267,12 @@ build_adios_python()
 	#unset CC
 	#unset CXX
     module unload python_numpy
+    echo_done "adios_python"
 }
 
 build_sqlite3()
 {
+    cd $WORK_DIR
     echo_start "sqlite3"
     subdir=sqlite-autoconf-${SQLITE3_VERSION}
     if [ ! -d ${subdir} ] ; then
@@ -290,6 +295,7 @@ build_sqlite3()
 
 build_ffi() 
 {
+    cd $WORK_DIR
     echo_start "ffi"
     olddir=`pwd`
     if [ ! -d libffi-${FFI_VERSION} ] ; then
@@ -313,6 +319,7 @@ build_ffi()
 
 build_sos()
 {
+    cd $WORK_DIR
     echo_start "sos_flow"
     if [ ! -d sos_flow ] ; then
         # Clone the repository
@@ -349,6 +356,7 @@ build_sos()
 }
 
 build_pdt() {
+    cd $WORK_DIR
     echo_start "pdt"
     subdir=pdtoolkit-${PDT_VERSION}
     if [ ! -d ${subdir} ] ; then
@@ -367,6 +375,7 @@ build_pdt() {
 
 build_tau()
 {
+    cd $WORK_DIR
     echo_start "tau"
     if [ ! -d tau2-${TAU_VERSION} ] ; then
         if [ ! -f tau2-${TAU_VERSION}.tar.gz ] ; then
